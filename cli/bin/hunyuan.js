@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// --inspect-brk
 const { program } = require('commander')
 const chalk = require('chalk')
 const leven = require('leven')
@@ -13,7 +14,6 @@ program
   // .option('-p, --preset <presetName>', 'Skip prompts and use saved or remote preset')
   .action((name,cmd)=>{
     const options = cleanArgs(cmd)
-    console.log(name,options)
     require('../lib/create')(name,options)
   })
 
@@ -23,6 +23,13 @@ program
   .action(()=>{
     require('../lib/template')()
   })
+
+program
+.command('meta')
+.description('meta test')
+.action(()=>{
+  require('../lib/meta')
+})
 
 program
 .arguments('<command>')
