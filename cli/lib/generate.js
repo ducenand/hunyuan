@@ -2,6 +2,7 @@ const chalk = require('chalk')
 const Metalsmith = require('metalsmith')
 const Handlebars = require('handlebars')
 const async = require('async')
+const execa = require('execa')
 const render = require('consolidate').handlebars.render
 const path = require('path')
 const multimatch = require('multimatch')
@@ -49,7 +50,6 @@ module.exports = function generate (name, src, dest, done) {
   if (opts.metalsmith && typeof opts.metalsmith.before === 'function') {
     opts.metalsmith.before(metalsmith, opts, helpers)
   }
-
   metalsmith.use(askQuestions(opts.prompts))
   .use(filterFiles(opts.filters))
   .use(renderTemplateFiles(opts.skipInterpolation))
@@ -65,12 +65,17 @@ module.exports = function generate (name, src, dest, done) {
     .destination(dest)
     .build((err, files) => {
     done(err)
-    if (typeof opts.complete === 'function') {
-      const helpers = { chalk, logger, files }
-      opts.complete(data, helpers)
-    } else {
+    console.log(`🎉  Successfully created project ${chalk.yellow(name)}.`)
+    console.log()
+    console.log(`📦  Installing additional dependencies...`)
+    const child = execa('npm', ['install'], { cwd: dest, stdio: ['inherit', 'inherit', 'inherit']})
+    child.on('close', code => {
+      if (code !== 0) {
+        logger.fatal('command failed: npm install')
+        return
+      }
       logMessage(opts.completeMessage, data)
-    }
+    })
   })
 
   return data
@@ -152,7 +157,7 @@ function logMessage (message, data) {
     if (err) {
       console.error('\n   Error when rendering template complete message: ' + err.message.trim())
     } else {
-      console.log('\n' + res.split(/\r?\n/g).map(line => '   ' + line).join('\n'))
+      console.log(chalk.cyan('\n' + res.split(/\r?\n/g).map(line => ' ' + line).join('\n')))
     }
   })
 }

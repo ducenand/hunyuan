@@ -15,7 +15,8 @@ exports.fetchRepoList = async () => {
         full_name: item.full_name,
         html_url: item.html_url,
         clone_url: item.clone_url,
-        description: item.description
+        description: item.description,
+        pushed_at: item.pushed_at
       }
     })
   } else {

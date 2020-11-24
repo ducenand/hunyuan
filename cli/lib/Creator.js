@@ -26,23 +26,8 @@ module.exports = class Creator extends EventEmitter {
     const temPath = await this.downTemplate()
     generate(name, temPath, context,  err => {
       if (err) logger.fatal(err)
-      // const child = run('npm install')
-      const child = execa('npm', ['install'], { cwd: context, stdio: ['inherit', 'inherit', 'inherit']})
-      // child.stdout.on('data', buffer => {
-      //   process.stdout.write(buffer)
-      // })
-      child.on('close', code => {
-        if (code !== 0) {
-          logger.fatal('command failed: npm install')
-          return
-        }
-        console.log()
-        logger.success('Generated "%s".', name)
-      })
-
     })
   }
-
   async downTemplate() {
     // 是否有git环境
     const shouldInitGit = this.shouldInitGit()
@@ -50,6 +35,7 @@ module.exports = class Creator extends EventEmitter {
     if (shouldInitGit) {
       logWithSpinner(`🗃`, `git repository...`)
       const list = await fetchRepoList()
+      // console.log(list)
       stopSpinner()
       list.push({
         name: 'Cancel', value: false
@@ -69,6 +55,7 @@ module.exports = class Creator extends EventEmitter {
           return item.name === action
         })[0]
         const downPath = path.join(tmp,currentTemplate.name)
+        //todo 缓存 版本校验
         if (exists(downPath)){
           return downPath
         }
@@ -78,9 +65,6 @@ module.exports = class Creator extends EventEmitter {
         stopSpinner()
         return downPath
       }
-
-      // this.emit('creation', { event: 'git-init' })
-      // await run('git init')
     }
   }
   run (command, args) {
