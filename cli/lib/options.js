@@ -1,7 +1,7 @@
 const path = require('path')
 const metadata = require('read-metadata')
 const exists = require('fs').existsSync
-const getGitUser = require('./git-user')
+const getGitUser = require('./util/gitUser')
 const validateName = require('validate-npm-package-name')
 
 /**

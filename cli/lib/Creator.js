@@ -2,12 +2,12 @@ const path = require('path')
 const inquirer = require('inquirer')
 const execa = require('execa')
 const util = require('util')
-const generate = require('./generate')
+const fs = require('fs-extra')
 const home = require('user-home')
-const logger = require('./logger')
-const exists = require('fs').existsSync
-const rm = require('rimraf').sync
+const logger = require('./util/logger')
+const exists = fs.existsSync
 const downloadGitRepo = util.promisify(require('download-git-repo'))
+const generate = require('./generate')
 
 const EventEmitter = require('events')
 const { hasGit,hasProjectGit} = require('./util/verify')
@@ -22,8 +22,9 @@ module.exports = class Creator extends EventEmitter {
     this.run = this.run.bind(this)
   }
   async create (cliOpitons = {}) {
-    const { run,name,context } = this
+    const { name,context } = this
     const temPath = await this.downTemplate()
+    if(!temPath) return
     generate(name, temPath, context,  err => {
       if (err) logger.fatal(err)
     })
@@ -35,7 +36,6 @@ module.exports = class Creator extends EventEmitter {
     if (shouldInitGit) {
       logWithSpinner(`🗃`, `git repository...`)
       const list = await fetchRepoList()
-      // console.log(list)
       stopSpinner()
       list.push({
         name: 'Cancel', value: false
@@ -55,18 +55,38 @@ module.exports = class Creator extends EventEmitter {
           return item.name === action
         })[0]
         const downPath = path.join(tmp,currentTemplate.name)
-        //todo 缓存 版本校验
-        if (exists(downPath)){
+        const isCache = this.cache(tmp,currentTemplate)
+        if (exists(downPath) && isCache){
           return downPath
         }
-        // rm(downPath)
+        fs.removeSync(downPath)
         logWithSpinner(`🗃`, `Download ${action} ...`)
         await downloadGitRepo(currentTemplate.full_name, downPath)
         stopSpinner()
+        console.log(`🎉  Successfully download project.`)
         return downPath
       }
     }
   }
+  cache(tmp,template) {
+    const cacheFile = path.join(tmp,'update.json')
+    if(!exists(cacheFile)) {
+      const updateJson = {}
+      updateJson[template.name] = template.pushed_at || ''
+      fs.writeJsonSync(cacheFile,updateJson)
+      return false
+    }else{
+      const fileJson = fs.readJsonSync(cacheFile) || {}
+      if(fileJson[template.name] && fileJson[template.name]===template.pushed_at) {
+        return true
+      }else {
+        fileJson[template.name] = template.pushed_at
+        fs.writeJsonSync(cacheFile,fileJson)
+        return false
+      }
+    }
+  }
+
   run (command, args) {
     if (!args) { [command, ...args] = command.split(/\s+/) }
     return execa(command, args, { cwd: this.context })

@@ -1,5 +1,5 @@
 const match = require('minimatch')
-const evaluate = require('./eval')
+const evaluate = require('./util/eval')
 
 module.exports = (files, filters, data, done) => {
   if (!filters) {
@@ -8,9 +8,6 @@ module.exports = (files, filters, data, done) => {
   const fileNames = Object.keys(files)
   Object.keys(filters).forEach(glob => {
     fileNames.forEach(file => {
-      if(file === 'meta.json' || file === 'meta.js'){
-        delete files[file]
-      }
       if (match(file, glob, { dot: true })) {
         const condition = filters[glob]
         if (!evaluate(condition, data)) {

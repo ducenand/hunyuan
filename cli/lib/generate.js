@@ -9,7 +9,7 @@ const multimatch = require('multimatch')
 const getOptions = require('./options')
 const ask = require('./ask')
 const filter = require('./filter')
-const logger = require('./logger')
+const logger = require('./util/logger')
 
 // register handlebars helper
 Handlebars.registerHelper('if_eq', function (a, b, opts) {
@@ -35,7 +35,7 @@ Handlebars.registerHelper('unless_eq', function (a, b, opts) {
 
 module.exports = function generate (name, src, dest, done) {
   const opts = getOptions(name, src)
-  const metalsmith = Metalsmith(src)
+  const metalsmith = Metalsmith(path.join(src, 'template'))
   const data = Object.assign(metalsmith.metadata(), {
     destDirName: name,
     inPlace: dest === process.cwd(),
