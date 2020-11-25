@@ -1,0 +1,16 @@
+{
+  "name": "@hunyuan/video-stat",
+  "version": "1.0.1",
+  "description": "A statistical video duration tool.",
+  "bin": {
+    "videostat": "./bin/videocount.js"
+  },
+  "keywords": [
+    "video"
+  ],
+  "author": "moshangsang",
+  "license": "ISC",
+  "dependencies": {
+    "moment": "^2.27.0"
+  }
+}
