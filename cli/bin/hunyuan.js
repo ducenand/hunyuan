@@ -25,13 +25,6 @@ program
   })
 
 program
-.command('meta')
-.description('meta test')
-.action(()=>{
-  require('../lib/meta')
-})
-
-program
 .arguments('<command>')
 .action((cmd) => {
   program.outputHelp()
