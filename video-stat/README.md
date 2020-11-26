@@ -12,4 +12,8 @@ videostat ./test.mp4
 ## 统计目录下所有视频
 videocount ./mp4
 ```
-    
+
+| name | format | duration |
+| :-----| ----: | :----: |
+| test01 | mp4 | 1:52 |
+| test02 | mp4 | 1:33:32 |

@@ -28,11 +28,11 @@ function getLocaleTime (seconds) {
     return moment
         .duration(seconds, 'seconds')
         .toJSON()
-        .replace(/[PTHMS]/g, str => {
+        .replace(/[PTHMSD]/g, str => {
             switch (str) {
-            case 'H': return '小时'
-            case 'M': return '分钟'
-            case 'S': return '秒'
+            case 'H': return ':'
+            case 'M': return ':'
+            case 'S': return ''
             default: return ''
             }
         })
@@ -47,9 +47,9 @@ module.exports = async (filePath) => {
     const duration = getLocaleTime(time)
     let format = path.extname(filePath).split('.').pop().toLowerCase()
     let name = path.basename(filePath).split('.')[0]
-    return {
-        duration,
+    return [
+        name,
         format,
-        name
-    }
+        duration
+    ]
 }

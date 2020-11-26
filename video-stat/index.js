@@ -3,6 +3,16 @@ const path = require('path')
 const fs = require('fs')
 const stat = util.promisify(fs.stat)
 const readdir = util.promisify(fs.readdir)
+const Table = require('cli-table')
+const clc = require("cli-color")
+
+const table = new Table({
+    head: ['name', 'format', 'duration'],
+    chars: { 'top': '═' , 'top-mid': '╤' , 'top-left': '╔' , 'top-right': '╗'
+        , 'bottom': '═' , 'bottom-mid': '╧' , 'bottom-left': '╚' , 'bottom-right': '╝'
+        , 'left': '║' , 'left-mid': '╟' , 'mid': '─' , 'mid-mid': '┼'
+        , 'right': '║' , 'right-mid': '╢' , 'middle': '│' }
+})
 
 const filePath = path.resolve(process.cwd() , process.argv[2])
 // 视频信息
@@ -13,9 +23,9 @@ const videoInfo = require('./lib/videoInfo')
         const stats = await stat(filePath)
         if(stats.isFile()) {
             const data = await videoInfo(filePath)
-            const res = `视频名称: ${data.name} ,格式: ${data.format} ,视频总时长:${data.duration}`
             // 输出单个视频文件信息
-            console.log(res)
+            table.push(data)
+            console.log(clc.blue(table.toString()))
         } else if (stats.isDirectory()) {
             const files = await readdir(filePath)
             if(Array.isArray(files)) {
@@ -32,7 +42,8 @@ const videoInfo = require('./lib/videoInfo')
                 // eslint-disable-next-line no-undef
                 Promise.all(total).then((res)=>{
                     // 输出目录下所有视频
-                    console.log(res)
+                    table.push(...res)
+                    console.log(clc.blue(table.toString()))
                 })
             } else {
                 console.error('目录为空')
