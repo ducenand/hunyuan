@@ -5,7 +5,8 @@ exports.fetchRepoList = async () => {
   const res = await axios.get(BASE_URL+'/orgs/FE-project-template/repos').catch((err)=>{
     console.log()
     console.log(chalk.red('check your network connection'))
-    console.log(err.message.trim())
+    console.log('error message:' + chalk.red(err.message.trim()))
+    process.exit(1)
   })
   if(res.status === 200) {
     return res.data.map(item => {
@@ -14,12 +15,13 @@ exports.fetchRepoList = async () => {
         full_name: item.full_name,
         html_url: item.html_url,
         clone_url: item.clone_url,
-        description: item.description
+        description: item.description,
+        pushed_at: item.pushed_at
       }
     })
   } else {
-    console.log('fetch repo list error:' + res.status)
-    return []
+    console.log(chalk.red('fetch repo list error:' + res.message))
+    process.exit(1)
   }
 
 }
