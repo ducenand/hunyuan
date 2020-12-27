@@ -1,0 +1,24 @@
+{
+  "name": "anydoor",
+  "version": "1.0.0",
+  "description": "静态资源服务",
+  "bin": {
+    "anydoor": "bin/index.js"
+  },
+  "directories": {
+    "lib": "helper"
+  },
+  "dependencies": {
+    "handlebars": "^4.7.6",
+    "portfinder": "^1.0.28",
+    "yargs": "^16.2.0",
+    "zlib": "^1.0.5"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "moshangsang",
+  "license": "ISC"
+}
