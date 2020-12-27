@@ -2,11 +2,6 @@ const conf = require('./config/index')
 const openUrl = require('./utils/openUrl')
 const http = require('http')
 const path = require('path')
-const wwwroot = path.resolve(__dirname,'./www')
-const mime = require('./helper/mime')
-const zlib = require('zlib')
-const  fs = require('fs')
-var Buffer = require('buffer')
 const route = require('./route')
 
 /**

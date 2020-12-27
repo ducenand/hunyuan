@@ -11,8 +11,7 @@
   "dependencies": {
     "handlebars": "^4.7.6",
     "portfinder": "^1.0.28",
-    "yargs": "^16.2.0",
-    "zlib": "^1.0.5"
+    "yargs": "^16.2.0"
   },
   "devDependencies": {},
   "scripts": {
