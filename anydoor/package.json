@@ -1,5 +1,5 @@
 {
-  "name": "anydoor",
+  "name": "@hunyuan/anydoor",
   "version": "1.0.0",
   "description": "静态资源服务",
   "bin": {
