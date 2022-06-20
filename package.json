@@ -1,0 +1,22 @@
+{
+  "name": "hunyuan",
+  "private": "true",
+  "packageManager": "pnpm@7.3.0",
+  "version": "1.0.0",
+  "description": "浑元",
+  "main": "index.js",
+  "scripts": {
+    "preinstall": "npx only-allow pnpm"
+  },
+  "keywords": [],
+  "author": "ducenand",
+  "engines": {
+    "node": ">=16",
+    "pnpm": ">=7"
+  },
+  "license": "ISC",
+  "devDependencies": {
+    "only-allow": "^1.1.0",
+    "pnpm": "^7.3.0"
+  }
+}
